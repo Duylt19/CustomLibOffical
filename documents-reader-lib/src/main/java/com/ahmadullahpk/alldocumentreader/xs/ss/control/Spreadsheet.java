@@ -120,17 +120,16 @@ public class Spreadsheet extends LinearLayout implements IFind, IReaderListener,
         
         if (sheetview == null)
         {
-            Log.e("TAG", "initsheetview: " );
-            sheetview = new SheetView(this, workbook.getSheet(1));
+            sheetview = new SheetView(this, workbook.getSheet(0));
         }
-
+        
         //initSheetbar();
         
         initFinish = true;
-        short state = workbook.getSheet(1).getState();
+        short state = workbook.getSheet(0).getState();
         if(state != Sheet.State_Accomplished)
         {
-            workbook.getSheet(1).setReaderListener(this);
+            workbook.getSheet(0).setReaderListener(this);
             
             control.actionEvent(EventConstant.SYS_SET_PROGRESS_BAR_ID, true);
         }
@@ -279,6 +278,7 @@ public class Spreadsheet extends LinearLayout implements IFind, IReaderListener,
         {
             eventManage.stopFling();
             control.getMainFrame().setFindBackForwardState(false);
+            
             control.actionEvent(EventConstant.SS_SHEET_CHANGE,
                 fileName + " : " + sheet.getSheetName());
             sheetview.changeSheet(sheet);
@@ -466,7 +466,7 @@ public class Spreadsheet extends LinearLayout implements IFind, IReaderListener,
      */
     public Bitmap getThumbnail(int width, int height, float zoomValue)
     {
-        Sheet sheet = workbook.getSheet(1);
+        Sheet sheet = workbook.getSheet(0);
         if( sheet == null || sheet.getState() != Sheet.State_Accomplished)
         {
             return  null;
@@ -474,7 +474,7 @@ public class Spreadsheet extends LinearLayout implements IFind, IReaderListener,
         
         if (sheetview == null)
         {
-            sheetview = new SheetView(this, workbook.getSheet(1));
+            sheetview = new SheetView(this, workbook.getSheet(0));
         }
         
         return sheetview.getThumbnail(sheet, width, height, zoomValue);        

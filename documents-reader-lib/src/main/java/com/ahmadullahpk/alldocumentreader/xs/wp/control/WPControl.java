@@ -595,7 +595,7 @@ public class WPControl extends AbstractControl
 
     @Override
     public void setNightMode(boolean isNightMode) {
-
+        wpView.setNightMode(isNightMode);
     }
 
     private boolean isDispose;

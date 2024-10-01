@@ -6,6 +6,7 @@
  */
 package   com.ahmadullahpk.alldocumentreader.xs.wp.view;
 
+import com.ahmadullahpk.alldocumentreader.xs.common.PaintKit;
 import   com.ahmadullahpk.alldocumentreader.xs.common.bulletnumber.ListData;
 import   com.ahmadullahpk.alldocumentreader.xs.common.bulletnumber.ListKit;
 import   com.ahmadullahpk.alldocumentreader.xs.common.bulletnumber.ListLevel;
@@ -23,6 +24,7 @@ import   com.ahmadullahpk.alldocumentreader.xs.simpletext.view.PageAttr;
 import   com.ahmadullahpk.alldocumentreader.xs.simpletext.view.ParaAttr;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
@@ -223,6 +225,7 @@ public class BNView extends AbstractView/* implements IMemObj*/
     {
         int dX = (int)(x * zoom) + originX;
         int dY = (int)(y * zoom) + originY;
+        paint = PaintKit.instance().getPaintNightMode(paint); //night mode
         
         if (content != null && content instanceof String)
         {

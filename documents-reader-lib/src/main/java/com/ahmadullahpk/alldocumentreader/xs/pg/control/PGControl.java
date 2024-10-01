@@ -725,7 +725,7 @@ public class PGControl extends AbstractControl
 
     @Override
     public void setNightMode(boolean isNightMode) {
-
+        pgView.setNightMode(isNightMode);
     }
 
     //

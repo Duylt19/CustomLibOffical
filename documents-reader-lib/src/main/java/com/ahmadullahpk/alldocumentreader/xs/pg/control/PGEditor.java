@@ -6,6 +6,9 @@
  */
 package   com.ahmadullahpk.alldocumentreader.xs.pg.control;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import   com.ahmadullahpk.alldocumentreader.xs.common.shape.AbstractShape;
@@ -58,6 +61,27 @@ public class PGEditor implements IWord
     public IHighlight getHighlight()
     {
         return highlight;
+    }
+    public void addListHighlight(IHighlight highlight)
+    {
+        highlightList.add(highlight);
+    }
+    public void removeListHighlight()
+    {
+        if (highlightList.isEmpty())
+        {
+            return;
+        }
+        for (int i = 0; i < highlightList.size(); i++)
+        {
+            highlightList.get(i).dispose();
+        }
+        highlightList.clear();
+    }
+
+    @Override
+    public List<IHighlight> getHighlightList() {
+        return highlightList;
     }
 
     /**
@@ -254,6 +278,7 @@ public class PGEditor implements IWord
     private TextBox editorTextBox;
     //
     private IHighlight highlight;
+    private final List<IHighlight> highlightList = new ArrayList<>();
     //
     private Presentation pgView;
     

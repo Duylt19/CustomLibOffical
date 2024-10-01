@@ -12,6 +12,8 @@ import com.ahmadullahpk.alldocumentreader.xs.pg.animate.IAnimation;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.model.IDocument;
 import com.ahmadullahpk.alldocumentreader.xs.system.IControl;
 
+import java.util.List;
+
 /**
  * IWord 接口
  * <p>
@@ -34,6 +36,7 @@ public interface IWord
      * @return Returns the highlight.
      */
     IHighlight getHighlight();
+    List<IHighlight> getHighlightList();
     /**
      * 
      */

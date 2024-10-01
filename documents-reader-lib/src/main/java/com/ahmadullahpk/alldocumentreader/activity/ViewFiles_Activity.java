@@ -87,7 +87,7 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
             this.control.getFind().findBackward();
         });
         binding.imgMode.setOnClickListener(view1 -> {
-            if (view1.isSelected()) {
+            if (SharedPrefManager.INSTANCE.getBoolean$documents_reader_lib_debug("key_night_mode", false)) {
                 SharedPrefManager.INSTANCE.putBoolean$documents_reader_lib_debug("key_night_mode", false);
                 this.control.setNightMode(false);
                 view1.setSelected(false);
@@ -96,6 +96,15 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
                 this.control.setNightMode(true);
                 view1.setSelected(true);
             }
+//            if (view1.isSelected()) {
+//                SharedPrefManager.INSTANCE.putBoolean$documents_reader_lib_debug("key_night_mode", false);
+//                this.control.setNightMode(false);
+//                view1.setSelected(false);
+//            } else {
+//                SharedPrefManager.INSTANCE.putBoolean$documents_reader_lib_debug("key_night_mode", true);
+//                this.control.setNightMode(true);
+//                view1.setSelected(true);
+//            }
         });
 
 

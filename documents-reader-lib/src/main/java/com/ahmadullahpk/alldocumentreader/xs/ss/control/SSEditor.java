@@ -15,6 +15,9 @@ import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.IWord;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.model.IDocument;
 import com.ahmadullahpk.alldocumentreader.xs.system.IControl;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * TODO: 文件注释
  * <p>
@@ -43,6 +46,11 @@ public class SSEditor implements IWord
     {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public List<IHighlight> getHighlightList() {
+        return Collections.emptyList();
     }
 
     @ Override

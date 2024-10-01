@@ -123,6 +123,7 @@ public class ShapeView extends LeafView
             	WatermarkShape watermark = (WatermarkShape)wpShape;
             	
                 paint = new Paint();
+                paint = PaintKit.instance().getPaintNightMode(paint); //night mode
                 paint.setAntiAlias(true);
                 String str = watermark.getWatermartString();
                 if (str != null && str.length() > 0)

@@ -57,6 +57,7 @@ public class PGFind implements IFind
         
         // find
         int slideIndex = presentation.getCurrentIndex();
+        boolean result = findSlideForward(slideIndex);
         do
         {
             if (findSlideForward(slideIndex))
@@ -224,6 +225,41 @@ public class PGFind implements IFind
             presentation.postInvalidate();
         }
         this.slideIndex = slideIndex; 
+        presentation.getEditor().setEditorTextBox(textBox);
+        presentation.getEditor().getHighlight().addHighlight(startOffset, startOffset + query.length());
+        //
+        presentation.getControl().actionEvent(EventConstant.SYS_UPDATE_TOOLSBAR_BUTTON_STATUS, null);
+        //
+        //presentation.getControl().actionEvent(EventConstant.APP_GENERATED_PICTURE_ID, null);
+    }
+    public void addAllHighlight(int slideIndex, TextBox textBox)
+    {
+        boolean invalidate = true;
+        if (slideIndex != presentation.getCurrentIndex())
+        {
+            presentation.showSlide(slideIndex, true);
+            isSetPointToVisible = true;
+            invalidate = false;
+        }
+        else
+        {
+            rect.setBounds(0, 0, 0, 0);
+            presentation.getEditor().modelToView(startOffset, rect, false);
+            if (!presentation.getPrintMode().getListView().isPointVisibleOnScreen(rect.x, rect.y))
+            {
+                presentation.getPrintMode().getListView().setItemPointVisibleOnScreen(rect.x, rect.y);
+                invalidate = false;
+            }
+            else
+            {
+                presentation.getPrintMode().exportImage(presentation.getPrintMode().getListView().getCurrentPageView(), null);
+            }
+        }
+        if (invalidate)
+        {
+            presentation.postInvalidate();
+        }
+        this.slideIndex = slideIndex;
         presentation.getEditor().setEditorTextBox(textBox);
         presentation.getEditor().getHighlight().addHighlight(startOffset, startOffset + query.length());
         //

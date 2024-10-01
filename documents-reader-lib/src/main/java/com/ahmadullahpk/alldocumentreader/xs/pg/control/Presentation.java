@@ -256,7 +256,7 @@ public class Presentation extends FrameLayout implements IFind, IExportListener
             post(new Runnable()
             {
                 
-                @ Override
+                @Override
                 public void run()
                 {
                     if (control != null)
@@ -1255,6 +1255,10 @@ public class Presentation extends FrameLayout implements IFind, IExportListener
             
             return slideView.getSlideshowToImage(pgModel.getSlide(slideIndex - 1), step);
     	}        
+    }
+    public void setNightMode(boolean night)
+    {
+        invalidate();
     }
     
     /**

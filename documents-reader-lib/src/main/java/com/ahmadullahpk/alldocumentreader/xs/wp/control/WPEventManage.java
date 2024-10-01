@@ -109,7 +109,7 @@ public class WPEventManage extends AEventManage
         long offset = word.viewToModel(x, y, false);
         if (word.getHighlight().isSelectText())
         {
-            word.getHighlight().removeHighlight();
+//            word.getHighlight().removeHighlight(); //highlight
             word.getStatus().setPressOffset(offset);
             word.postInvalidate();
         }

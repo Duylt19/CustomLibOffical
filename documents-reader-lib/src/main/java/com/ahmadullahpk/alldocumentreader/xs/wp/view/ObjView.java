@@ -1,12 +1,13 @@
 /*
  * 文件名称:          ObjView.java
- *  
+ *
  * 编译器:            android2.2
  * 时间:              上午9:45:54
  */
 package   com.ahmadullahpk.alldocumentreader.xs.wp.view;
 
 import   com.ahmadullahpk.alldocumentreader.xs.common.BackgroundDrawer;
+import com.ahmadullahpk.alldocumentreader.xs.common.PaintKit;
 import   com.ahmadullahpk.alldocumentreader.xs.common.picture.PictureKit;
 import   com.ahmadullahpk.alldocumentreader.xs.common.shape.PictureShape;
 import   com.ahmadullahpk.alldocumentreader.xs.common.shape.WPAutoShape;
@@ -38,21 +39,21 @@ import android.graphics.Rect;
  * <p>
  * 负责人:          ljj8494
  * <p>
- * 负责小组:         
+ * 负责小组:
  * <p>
  * <p>
  */
 public class ObjView extends LeafView
 {
     /**
-     * 
+     *
      */
     public ObjView()
     {
-        
+
     }
     /**
-     * 
+     *
      * @param paraElem
      * @param elem
      */
@@ -61,16 +62,16 @@ public class ObjView extends LeafView
         super(paraElem, elem);
         this.picShape = shape;
     }
-    
+
 	/**
-     * 
+     *
      */
     public short getType()
     {
         return WPViewConstant.OBJ_VIEW;
     }
-    
-    
+
+
     /**
      * 初始化leaf属性
      */
@@ -80,8 +81,9 @@ public class ObjView extends LeafView
         paint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
         paint.setTextSize(20);
+        paint = PaintKit.instance().getPaintNightMode(paint);
     }
-    
+
     /**
      * 视图布局
      * @param x
@@ -92,15 +94,15 @@ public class ObjView extends LeafView
     public int doLayout(DocAttr docAttr, PageAttr pageAttr, ParaAttr paraAttr, int x, int y, int w, int h, long maxEnd, int flag)
     {
     	this.pageAttr = pageAttr;
-    	
-        isInline = docAttr.rootType == WPViewConstant.NORMAL_ROOT 
+
+        isInline = docAttr.rootType == WPViewConstant.NORMAL_ROOT
             || (picShape.getWrap() != WPAutoShape.WRAP_TOP && picShape.getWrap() != WPAutoShape.WRAP_BOTTOM);
-        
+
         if (picShape.isWatermarkShape())
         {
             isInline = false;
         }
-        else if(WPViewKit.instance().getArea(start + 1) == WPModelConstant.HEADER 
+        else if(WPViewKit.instance().getArea(start + 1) == WPModelConstant.HEADER
         		|| WPViewKit.instance().getArea(start + 1) == WPModelConstant.FOOTER)
         {
         	isInline = true;
@@ -109,8 +111,8 @@ public class ObjView extends LeafView
         Rectangle r = picShape.getBounds();
         if (isInline)
         {
-            width = r.width;            
-            setSize(width, r.height);  
+            width = r.width;
+            setSize(width, r.height);
         }
         else if(!picShape.isWatermarkShape())
         {
@@ -129,10 +131,10 @@ public class ObjView extends LeafView
         }
         return breakType;
     }
-    
+
     /**
      * 得到指定结束位置字符宽度
-     * 
+     *
      * @param maxEnd
      * @return
      */
@@ -145,11 +147,11 @@ public class ObjView extends LeafView
     	else
     	{
     		return isInline ? (int)((WPPictureShape)picShape).getPictureShape().getBounds().getWidth() : 0;
-    	}        
+    	}
     }
-    
+
     /**
-     * 
+     *
      * @param canvas
      * @param x
      * @param y
@@ -164,75 +166,75 @@ public class ObjView extends LeafView
         	int top = Math.round((y * zoom) + originY);
         	int right = Math.round((x * zoom) + originX + getWidth() * zoom);
         	int bottom = Math.round((y * zoom) + originY + getHeight() * zoom);
-        	
+
         	rect.set(left, top, right, bottom);
 
         	if(!picShape.isWatermarkShape())
         	{
         		BackgroundDrawer.drawLineAndFill(canvas, control, getPageNumber(), ((WPPictureShape)picShape).getPictureShape(), rect, zoom);
-            	
+
                 PictureKit.instance().drawPicture(canvas, control, getPageNumber(), ((WPPictureShape)picShape).getPictureShape().getPicture(getControl()),
                   left, top, zoom, getWidth() * zoom, getHeight() * zoom, ((WPPictureShape)picShape).getPictureShape().getPictureEffectInfor());
-        	}        	
+        	}
         }
-        
+
     }
-    
+
     /**
-     * 
+     *
      * @param canvas
      * @param x
      * @param y
      * @param zoom
      */
     public synchronized void drawForWrap(Canvas canvas, int originX, int originY, float zoom)
-    {   
+    {
         int dX = (int)(x * zoom) + originX;
         int dY = (int)(y * zoom) + originY;
-        Rectangle r = picShape.getBounds();      
+        Rectangle r = picShape.getBounds();
         IControl control = getControl();
-        
+
         int left = Math.round((x * zoom) + originX);
     	int top = Math.round((y * zoom) + originY);
     	int right = (int)Math.round((x * zoom) + originX + r.getWidth() * zoom);
     	int bottom = (int)Math.round((y * zoom) + originY + r.getHeight() * zoom);
-    	
+
     	rect.set(left, top, right, bottom);
-    	
+
     	if(picShape.isWatermarkShape())
     	{
     		int mainBodyWidth = pageAttr.pageWidth - pageAttr.leftMargin - pageAttr.rightMargin;
             int mainBodyHeight = pageAttr.pageHeight - pageAttr.topMargin - pageAttr.bottomMargin;
-            
+
             float centerX = originX + (pageAttr.leftMargin + mainBodyWidth / 2f) * zoom;
             float centerY = originY + (pageAttr.topMargin + mainBodyHeight / 2f) * zoom;
-            
+
             left = Math.round(centerX - r.width * zoom / 2f);
             top = Math.round(centerY - r.height * zoom / 2f);
-            PictureKit.instance().drawPicture(canvas, control, getPageNumber(), 
+            PictureKit.instance().drawPicture(canvas, control, getPageNumber(),
             		PictureShape.getPicture(control, ((WatermarkShape)picShape).getPictureIndex()),
-            		left, 
-                    top, 
-                    zoom, 
-                    Math.round(r.getWidth() * zoom), 
-                    Math.round(r.getHeight() * zoom), 
+            		left,
+                    top,
+                    zoom,
+                    Math.round(r.getWidth() * zoom),
+                    Math.round(r.getHeight() * zoom),
                     ((WatermarkShape)picShape).getEffectInfor());
     	}
     	else
     	{
     		BackgroundDrawer.drawLineAndFill(canvas, control, getPageNumber(), ((WPPictureShape)picShape).getPictureShape(), rect, zoom);
-            
-            PictureKit.instance().drawPicture(canvas, control, getPageNumber(), 
+
+            PictureKit.instance().drawPicture(canvas, control, getPageNumber(),
             		((WPPictureShape)picShape).getPictureShape().getPicture(getControl()),
-                left, 
-                top, 
-                zoom, 
-                Math.round(r.getWidth() * zoom), 
-                Math.round(r.getHeight() * zoom), 
+                left,
+                top,
+                zoom,
+                Math.round(r.getWidth() * zoom),
+                Math.round(r.getHeight() * zoom),
                 ((WPPictureShape)picShape).getPictureShape().getPictureEffectInfor());
-    	}    	
+    	}
     }
-    
+
     /**
      * model到视图
      * @param offset 指定的offset
@@ -243,8 +245,8 @@ public class ObjView extends LeafView
         rect.x += getX();
         rect.y += getY();
         return rect;
-    }    
-    
+    }
+
     /**
      * @param x
      * @param y
@@ -254,27 +256,27 @@ public class ObjView extends LeafView
     {
         return start;
     }
-    
+
     public boolean isBehindDoc()
     {
         return picShape.getWrap() == WPAutoShape.WRAP_BOTTOM;
     }
-    
+
     /**
      * 得到基线
      */
     public int getBaseline()
     {
     	if(!picShape.isWatermarkShape())
-    	{    		
+    	{
     		return isInline ? (int)((WPPictureShape)picShape).getPictureShape().getBounds().getHeight() : 0;
     	}
-    	
+
     	return 0;
     }
-    
+
     /**
-     * 
+     *
      */
     public boolean isInline()
     {
@@ -287,16 +289,16 @@ public class ObjView extends LeafView
     {
         //ViewFactory.objView.free(this);
     }
-   
+
     /**
-     * 
+     *
      */
     public void dispose()
     {
         super.dispose();
-        picShape = null;      
+        picShape = null;
     }
-    
+
     private PageAttr pageAttr;
     // 字符属性
     private WPAutoShape picShape;

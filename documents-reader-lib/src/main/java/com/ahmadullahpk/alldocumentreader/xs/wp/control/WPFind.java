@@ -11,6 +11,7 @@ import android.util.Log;
 import com.ahmadullahpk.alldocumentreader.xs.constant.EventConstant;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPViewConstant;
 import com.ahmadullahpk.alldocumentreader.xs.java.awt.Rectangle;
+import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.Highlight;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.model.IDocument;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.model.IElement;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.view.IView;
@@ -54,6 +55,9 @@ public class WPFind implements IFind
      */
     public boolean find(String query)
     {
+        word.removeListHighlight();
+        boolean result = false;
+        int firstIndex = -1;
         if (query == null)
         {
             return false;
@@ -73,24 +77,42 @@ public class WPFind implements IFind
                 offset =  view.getStartOffset(null);
             }
         } else {
-            offset = word.viewToModel((int)(word.getScrollX() / zoom), 
+            offset = word.viewToModel((int)(word.getScrollX() / zoom),
                 (int)(word.getScrollY() / zoom ), false);
         }
         IDocument doc = word.getDocument();
         findElement = doc.getParagraph(offset);
-        while (findElement != null)
+        IElement newFindElement = findElement;
+        String findString = this.findString;
+        while (newFindElement != null)
         {
-            findString = findElement.getText(doc);
-            int index = findString.indexOf(query); 
+            findString = newFindElement.getText(doc);
+            int index = findString.indexOf(query);
             if (index >= 0)
             {
-                addHighlight(index, query.length());
-                return true;
+                if (firstIndex == -1)
+                {
+                    firstIndex = index;
+                    findElement= newFindElement;
+                    this.findString = findString;
+                }
+                addAllHighlight(index, query.length(),newFindElement);
+                result = true;
+                while (index>=0)
+                {
+                    index = findString.indexOf(query, index + query.length());
+                    addAllHighlight(index, query.length(),newFindElement);
+                }
             }
-            findElement = doc.getParagraph(findElement.getEndOffset());
+            newFindElement = doc.getParagraph(newFindElement.getEndOffset());
         }
-        findString = null;
-        return false;
+        if (result)
+        {
+            addHighlight(firstIndex, query.length());
+        }else{
+            this.findString = null;
+        }
+        return result;
     }
     
     /**
@@ -146,7 +168,7 @@ public class WPFind implements IFind
         IDocument doc = word.getDocument();
         if (findString != null)
         {
-            int index = findString.indexOf(query, relativeParaIndex); 
+            int index = findString.indexOf(query, relativeParaIndex);
             if (index >= 0)
             {
                 addHighlight(index, query.length());
@@ -258,6 +280,13 @@ public class WPFind implements IFind
         {
             word.getControl().actionEvent(EventConstant.APP_GENERATED_PICTURE_ID, null);
         }
+    }
+    private void addAllHighlight(int index, int queryLen,IElement findElement)
+    {
+        long findCurrentOffset = findElement.getStartOffset() + index;
+        Highlight newHighlight = new Highlight(word);
+        newHighlight.addHighlight(findCurrentOffset, findCurrentOffset + queryLen);
+        word.addListHighlight(newHighlight);
     }
     
     

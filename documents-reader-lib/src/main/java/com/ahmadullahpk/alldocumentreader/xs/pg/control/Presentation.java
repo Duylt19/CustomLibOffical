@@ -1260,6 +1260,9 @@ public class Presentation extends FrameLayout implements IFind, IExportListener
     {
         invalidate();
     }
+    public void setFlipType(int type){
+        invalidate();
+    }
     
     /**
      * 

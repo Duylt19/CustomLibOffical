@@ -492,7 +492,12 @@ public class PGPrintMode extends FrameLayout implements IPageListViewListener
     {
     	return control.getMainFrame().getPageListViewMovingPosition();
     }
-    
+
+    @Override
+    public void setPageListViewMovingPosition(byte position) {
+        control.getMainFrame().setPageListViewMovingPosition(position);
+    }
+
     /**
      * 
      */
@@ -700,6 +705,10 @@ public class PGPrintMode extends FrameLayout implements IPageListViewListener
     public boolean isChangePage()
     {
        return control.getMainFrame().isChangePage();
+    }
+    public void setFlipType(int type)
+    {
+
     }
     
     /**

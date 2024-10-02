@@ -76,7 +76,7 @@
             android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:padding="4dp"
-            android:src="@drawable/ic_view_mode"
+            android:src="@drawable/ic_night"
             app:layout_constraintEnd_toStartOf="@+id/imgPre"
             app:layout_constraintTop_toTopOf="parent" />
         <ImageView
@@ -87,6 +87,15 @@
             android:padding="4dp"
             android:src="@drawable/ic_view_mode"
             app:layout_constraintEnd_toStartOf="@+id/imgMode"
+            app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/imgChangeViewMode"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:padding="4dp"
+            android:src="@drawable/ic_view_mode"
+            app:layout_constraintEnd_toStartOf="@+id/imgGotoPage"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

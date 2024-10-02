@@ -534,6 +534,9 @@ public class SSControl extends AbstractControl
     @Override
     public void gotoPage(int page) {
     }
+    @Override
+    public void setFlipType(int type) {
+    }
 
     //
     private IControl mainControl;

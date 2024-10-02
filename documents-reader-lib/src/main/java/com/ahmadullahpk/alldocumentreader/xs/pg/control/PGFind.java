@@ -59,12 +59,11 @@ public class PGFind implements IFind
         
         // find
         int slideIndex = presentation.getCurrentIndex();
-        boolean result = false;
         do
         {
             if (findSlideForward(slideIndex))
             {
-//                return true;
+                return true;
             }
             if (++slideIndex == presentation.getRealSlideCount())
             {
@@ -164,9 +163,9 @@ public class PGFind implements IFind
      */
     private boolean findSlideForward(int slideIndex)
     {
-        boolean result = false;
         presentation.getEditor().removeListHighlight();
         PGSlide slide = presentation.getSlide(slideIndex);
+        boolean result = false;
         for (int i = Math.max(0, shapeIndex); i < slide.getShapeCountForFind(); i++)
         {
             IShape shape = slide.getShapeForFind(i);
@@ -190,15 +189,14 @@ public class PGFind implements IFind
                 {
                     startOffset = offset;
                     shapeIndex = i;
-                    addAllHighlight(slideIndex, (TextBox)shape);
-                    result = true;
+//                    result = true;
+                    addHighlight(slideIndex, (TextBox)slide.getShapeForFind(shapeIndex));
+                    return true;
                 }
             }
         }
-        if (result){
-            addHighlight(slideIndex, (TextBox)slide.getShapeForFind(shapeIndex));
-        }
-        return result;
+
+        return false;
     }
     
     /**
@@ -270,7 +268,7 @@ public class PGFind implements IFind
         presentation.getEditor().setEditorTextBox(textBox);
         Highlight newHighLight = new Highlight(presentation.getEditor());
         newHighLight.addHighlight(startOffset, startOffset + query.length());
-        presentation.getEditor().addListHighlight(newHighLight);
+//        presentation.getEditor().addH(newHighLight);
         //
         presentation.getControl().actionEvent(EventConstant.SYS_UPDATE_TOOLSBAR_BUTTON_STATUS, null);
         //

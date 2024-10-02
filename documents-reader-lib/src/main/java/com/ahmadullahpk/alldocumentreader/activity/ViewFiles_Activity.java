@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.ahmadullahpk.alldocumentreader.databinding.ActivityViewFilesBinding;
 import com.ahmadullahpk.alldocumentreader.R;
@@ -32,6 +33,7 @@ import com.ahmadullahpk.alldocumentreader.xs.ss.sheetbar.SheetBar;
 import com.ahmadullahpk.alldocumentreader.xs.system.IControl;
 import com.ahmadullahpk.alldocumentreader.xs.system.IMainFrame;
 import com.ahmadullahpk.alldocumentreader.xs.system.MainControl;
+import com.ahmadullahpk.alldocumentreader.xs.system.beans.pagelist.IPageListViewListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -57,6 +59,7 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
     private String tempFilePath;
     private Toast toast;
     private boolean writeLog = true;
+    private byte viewType = IPageListViewListener.Moving_Horizontal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +74,11 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
         binding = ActivityViewFilesBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
+        if (SharedPrefManager.INSTANCE.getBoolean$documents_reader_lib_debug("key_night_mode", false)) {
+            binding.imgMode.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_sun));
+        }else {
+            binding.imgMode.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_night));
+        }
 
         binding.headerTitleText.setTextAppearance(this, R.style.PageTitleBold);
         binding.imgBack.setOnClickListener(new View.OnClickListener() {
@@ -115,21 +122,22 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
             if (SharedPrefManager.INSTANCE.getBoolean$documents_reader_lib_debug("key_night_mode", false)) {
                 SharedPrefManager.INSTANCE.putBoolean$documents_reader_lib_debug("key_night_mode", false);
                 this.control.setNightMode(false);
-                view1.setSelected(false);
+                binding.imgMode.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_night));
             } else {
                 SharedPrefManager.INSTANCE.putBoolean$documents_reader_lib_debug("key_night_mode", true);
                 this.control.setNightMode(true);
-                view1.setSelected(true);
+                binding.imgMode.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_sun));
             }
-//            if (view1.isSelected()) {
-//                SharedPrefManager.INSTANCE.putBoolean$documents_reader_lib_debug("key_night_mode", false);
-//                this.control.setNightMode(false);
-//                view1.setSelected(false);
-//            } else {
-//                SharedPrefManager.INSTANCE.putBoolean$documents_reader_lib_debug("key_night_mode", true);
-//                this.control.setNightMode(true);
-//                view1.setSelected(true);
-//            }
+        });
+        binding.imgChangeViewMode.setOnClickListener(v->{
+            if (this.control.getMainFrame().getPageListViewMovingPosition() == IPageListViewListener.Moving_Horizontal) {
+                this.control.getMainFrame().setPageListViewMovingPosition(IPageListViewListener.Moving_Vertical);
+                viewType = IPageListViewListener.Moving_Vertical;
+            } else {
+                this.control.getMainFrame().setPageListViewMovingPosition(IPageListViewListener.Moving_Horizontal);
+                viewType = IPageListViewListener.Moving_Horizontal;
+            }
+            this.control.setFlipType(this.control.getMainFrame().getPageListViewMovingPosition());
         });
 
 
@@ -365,7 +373,11 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
 
     @Override
     public byte getPageListViewMovingPosition() {
-        return 0;
+        return viewType;
+    }
+
+    @Override
+    public void setPageListViewMovingPosition(byte position) {
     }
 
 

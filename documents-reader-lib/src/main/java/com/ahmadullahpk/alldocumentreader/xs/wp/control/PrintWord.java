@@ -505,7 +505,12 @@ public class PrintWord extends FrameLayout implements IPageListViewListener
     {
     	return control.getMainFrame().getPageListViewMovingPosition();
     }
-    
+
+    @Override
+    public void setPageListViewMovingPosition(byte position) {
+        control.getMainFrame().setPageListViewMovingPosition(position);
+    }
+
     /**
      * 
      */

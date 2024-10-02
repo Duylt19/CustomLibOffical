@@ -472,4 +472,8 @@ public class MainControl extends AbstractControl {
     public void gotoPage(int page) {
         this.appControl.gotoPage(page);
     }
+    @Override
+    public void setFlipType(int type) {
+        this.appControl.setFlipType(type);
+    }
 }

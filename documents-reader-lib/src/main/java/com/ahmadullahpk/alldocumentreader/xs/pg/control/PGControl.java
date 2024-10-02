@@ -738,6 +738,11 @@ public class PGControl extends AbstractControl
         pgView.showSlide(page - 1, false);
     }
 
+    @Override
+    public void setFlipType(int type) {
+        pgView.setFlipType(type);
+    }
+
     //
     private boolean isDispose;
     //

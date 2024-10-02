@@ -12,6 +12,8 @@ import   com.ahmadullahpk.alldocumentreader.xs.common.shape.TextBox;
 import   com.ahmadullahpk.alldocumentreader.xs.constant.EventConstant;
 import   com.ahmadullahpk.alldocumentreader.xs.java.awt.Rectangle;
 import   com.ahmadullahpk.alldocumentreader.xs.pg.model.PGSlide;
+import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.Highlight;
+import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.IHighlight;
 import   com.ahmadullahpk.alldocumentreader.xs.simpletext.model.SectionElement;
 import   com.ahmadullahpk.alldocumentreader.xs.system.IFind;
 
@@ -57,12 +59,12 @@ public class PGFind implements IFind
         
         // find
         int slideIndex = presentation.getCurrentIndex();
-        boolean result = findSlideForward(slideIndex);
+        boolean result = false;
         do
         {
             if (findSlideForward(slideIndex))
             {
-                return true;
+//                return true;
             }
             if (++slideIndex == presentation.getRealSlideCount())
             {
@@ -162,6 +164,8 @@ public class PGFind implements IFind
      */
     private boolean findSlideForward(int slideIndex)
     {
+        boolean result = false;
+        presentation.getEditor().removeListHighlight();
         PGSlide slide = presentation.getSlide(slideIndex);
         for (int i = Math.max(0, shapeIndex); i < slide.getShapeCountForFind(); i++)
         {
@@ -186,12 +190,15 @@ public class PGFind implements IFind
                 {
                     startOffset = offset;
                     shapeIndex = i;
-                    addHighlight(slideIndex, (TextBox)shape);
-                    return true;
+                    addAllHighlight(slideIndex, (TextBox)shape);
+                    result = true;
                 }
             }
         }
-        return false;
+        if (result){
+            addHighlight(slideIndex, (TextBox)slide.getShapeForFind(shapeIndex));
+        }
+        return result;
     }
     
     /**
@@ -261,7 +268,9 @@ public class PGFind implements IFind
         }
         this.slideIndex = slideIndex;
         presentation.getEditor().setEditorTextBox(textBox);
-        presentation.getEditor().getHighlight().addHighlight(startOffset, startOffset + query.length());
+        Highlight newHighLight = new Highlight(presentation.getEditor());
+        newHighLight.addHighlight(startOffset, startOffset + query.length());
+        presentation.getEditor().addListHighlight(newHighLight);
         //
         presentation.getControl().actionEvent(EventConstant.SYS_UPDATE_TOOLSBAR_BUTTON_STATUS, null);
         //

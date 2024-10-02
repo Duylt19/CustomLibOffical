@@ -90,12 +90,21 @@ public class WPFind implements IFind
             int index = findString.indexOf(query);
             if (index >= 0)
             {
-                if (firstIndex == -1)
-                {
-                    firstIndex = index;
-                    findElement= newFindElement;
-                    this.findString = findString;
-                }
+                firstIndex = index;
+                findElement= newFindElement;
+                this.findString = findString;
+                result = true;
+                break;
+            }
+            newFindElement = doc.getParagraph(newFindElement.getEndOffset());
+        }
+        newFindElement = doc.getParagraph(0);
+        while (newFindElement != null)
+        {
+            findString = newFindElement.getText(doc);
+            int index = findString.indexOf(query);
+            if (index >= 0)
+            {
                 addAllHighlight(index, query.length(),newFindElement);
                 result = true;
                 while (index>=0)

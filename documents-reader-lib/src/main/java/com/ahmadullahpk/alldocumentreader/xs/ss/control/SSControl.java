@@ -531,6 +531,9 @@ public class SSControl extends AbstractControl
         this.excelView.setNightMode(isNightMode);
     }
 
+    @Override
+    public void gotoPage(int page) {
+    }
 
     //
     private IControl mainControl;

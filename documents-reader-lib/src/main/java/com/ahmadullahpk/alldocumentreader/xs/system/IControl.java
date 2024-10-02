@@ -139,4 +139,5 @@ public interface IControl
     public void dispose();
 
     public void setNightMode(boolean isNightMode);
+    public void gotoPage(int page);
 }

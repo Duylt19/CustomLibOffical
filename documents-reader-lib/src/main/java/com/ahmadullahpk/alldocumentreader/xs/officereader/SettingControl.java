@@ -109,6 +109,9 @@ public class SettingControl extends AbstractControl
     public void setNightMode(boolean isNightMode) {
 
     }
+    public void gotoPage(int page) {
+
+    }
 
     //
     private Activity activity;

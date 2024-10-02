@@ -468,4 +468,8 @@ public class MainControl extends AbstractControl {
     public void setNightMode(boolean isNightMode) {
         this.appControl.setNightMode(isNightMode);
     }
+    @Override
+    public void gotoPage(int page) {
+        this.appControl.gotoPage(page);
+    }
 }

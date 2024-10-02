@@ -1373,6 +1373,15 @@ public class Word extends LinearLayout implements IWord
         {
             printWord.dispose();
         }
+        if (highlightList != null)
+        {
+            for (int i = 0; i < highlightList.size(); i++)
+            {
+                highlightList.get(i).dispose();
+            }
+            highlightList.clear();
+            highlightList = null;
+        }
         setOnClickListener(null);
         doc = null;
         paint = null;

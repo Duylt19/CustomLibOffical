@@ -597,6 +597,15 @@ public class WPControl extends AbstractControl
     public void setNightMode(boolean isNightMode) {
         wpView.setNightMode(isNightMode);
     }
+    @Override
+    public void gotoPage(int page) {
+        if (page > wpView.getPageCount()) {
+            page = wpView.getPageCount();
+        } else if (page < 1) {
+            page = 1;
+        }
+        wpView.showPage(page - 1, EventConstant.APP_PAGE_UP_ID);
+    }
 
     private boolean isDispose;
     //

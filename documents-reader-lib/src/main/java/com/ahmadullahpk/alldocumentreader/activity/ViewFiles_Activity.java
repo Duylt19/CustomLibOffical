@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.ahmadullahpk.alldocumentreader.databinding.ActivityViewFilesBinding;
 import com.ahmadullahpk.alldocumentreader.R;
+import com.ahmadullahpk.alldocumentreader.databinding.DialogGotoPageBinding;
 import com.ahmadullahpk.alldocumentreader.util.SharedPrefManager;
 import com.ahmadullahpk.alldocumentreader.xs.common.IOfficeToPicture;
 import com.ahmadullahpk.alldocumentreader.xs.constant.EventConstant;
@@ -85,6 +87,29 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
         });
         binding.imgPre.setOnClickListener(view1 -> {
             this.control.getFind().findBackward();
+        });
+        binding.imgGotoPage.setOnClickListener(view1 -> {
+            DialogGotoPageBinding dialogBinding = DialogGotoPageBinding.inflate(getLayoutInflater());
+            Dialog dialog = new Dialog(this);
+            dialog.setContentView(dialogBinding.getRoot());
+            dialogBinding.tvOkay.setOnClickListener(view2 -> {
+                dialog.dismiss();
+                try {
+                    if (dialogBinding.edtGotoPage.getText().toString().isEmpty()) {
+                        return;
+                    }
+                    int page = Integer.parseInt(dialogBinding.edtGotoPage.getText().toString());
+                    this.control.gotoPage(page);
+                }catch (NumberFormatException e){
+                    this.control.gotoPage(1);
+                }
+            });
+            dialogBinding.tvCancel.setOnClickListener(view2 -> {
+                dialog.dismiss();
+            });
+            if (dialog != null) {
+                dialog.show();
+            }
         });
         binding.imgMode.setOnClickListener(view1 -> {
             if (SharedPrefManager.INSTANCE.getBoolean$documents_reader_lib_debug("key_night_mode", false)) {

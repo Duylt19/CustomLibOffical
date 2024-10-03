@@ -113,9 +113,6 @@ public class SettingControl extends AbstractControl
     public void gotoPage(int page) {
 
     }
-    @Override
-    public void setFlipType(int type) {
-    }
 
     //
     private Activity activity;

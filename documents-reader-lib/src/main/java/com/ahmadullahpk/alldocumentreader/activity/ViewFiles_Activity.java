@@ -137,9 +137,7 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
                 this.control.getMainFrame().setPageListViewMovingPosition(IPageListViewListener.Moving_Horizontal);
                 viewType = IPageListViewListener.Moving_Horizontal;
             }
-            this.control.setFlipType(this.control.getMainFrame().getPageListViewMovingPosition());
         });
-
 
         this.control = new MainControl(this);
         this.appFrame = findViewById(R.id.appFrame);

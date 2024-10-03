@@ -140,5 +140,4 @@ public interface IControl
 
     public void setNightMode(boolean isNightMode);
     public void gotoPage(int page);
-    public void setFlipType(int type);
 }

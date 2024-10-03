@@ -606,9 +606,6 @@ public class WPControl extends AbstractControl
         }
         wpView.showPage(page - 1, EventConstant.APP_PAGE_UP_ID);
     }
-    @Override
-    public void setFlipType(int type) {
-    }
 
     private boolean isDispose;
     //

@@ -10,6 +10,8 @@ import com.ahmadullahpk.alldocumentreader.xs.constant.MainConstant;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPAttrConstant;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPViewConstant;
 import com.ahmadullahpk.alldocumentreader.xs.java.awt.Rectangle;
+import com.ahmadullahpk.alldocumentreader.xs.pg.control.PGEditor;
+import com.ahmadullahpk.alldocumentreader.xs.pg.control.Presentation;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.Highlight;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.IHighlight;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.IWord;
@@ -368,7 +370,14 @@ public class LineView extends AbstractView/* implements IMemObj*/
             List<IHighlight> highlightList = new ArrayList<>(word.getHighlightList());
             for (IHighlight highlight : highlightList)
             {
-                highlight.drawAll(canvas, this, dX, dY, getStartOffset(null), getEndOffset(null), zoom);
+                if (word instanceof PGEditor){
+                    if (((PGEditor) word).getPGView().getCurrentIndex() == ((Highlight) highlight).getSlideIndex()) {
+                        highlight.drawAll(canvas, this, dX, dY, getStartOffset(null),
+                                getEndOffset(null), zoom);
+                    }
+                }else{
+                    highlight.drawAll(canvas, this, dX, dY, getStartOffset(null), getEndOffset(null), zoom);
+                }
             }
         }
     }

@@ -263,7 +263,15 @@ public class Highlight implements IHighlight
     {
         this.isPaintHighlight = isPaintHighlight;
     }
-    
+    public int getSlideIndex()
+    {
+        return slideIndex;
+    }
+    public void setSlideIndex(int slideIndex)
+    {
+        this.slideIndex = slideIndex;
+    }
+    private int slideIndex = -1;
     /** 
      * 
      */

@@ -181,4 +181,5 @@ public interface IPageListViewListener
     * @param position horizontal or vertical
     */
    public byte getPageListViewMovingPosition();
+   public void setPageListViewMovingPosition(byte position);
 }

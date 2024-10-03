@@ -355,7 +355,7 @@ public class SlideDrawKit
         {
             editor.getHighlight().setPaintHighlight(shape == editor.getEditorTextBox());
             
-            root.draw(canvas, (int)((rect.x) * zoom), (int)((rect.y) * zoom), zoom);            
+            root.draw(canvas, (int)((rect.x) * zoom), (int)((rect.y) * zoom), zoom);
             //
             editor.getHighlight().setPaintHighlight(false);
         }        

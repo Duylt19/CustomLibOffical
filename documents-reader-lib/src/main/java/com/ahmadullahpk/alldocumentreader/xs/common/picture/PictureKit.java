@@ -10,6 +10,7 @@ package com.ahmadullahpk.alldocumentreader.xs.common.picture;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import com.ahmadullahpk.alldocumentreader.xs.common.PaintKit;
 import com.ahmadullahpk.alldocumentreader.xs.common.pictureefftect.PictureCroppedInfo;
 import com.ahmadullahpk.alldocumentreader.xs.common.pictureefftect.PictureEffectInfo;
 import com.ahmadullahpk.alldocumentreader.xs.common.pictureefftect.PictureEffectUtil;
@@ -211,6 +212,7 @@ public class PictureKit
                x - offX + srcCrop.width() * zoomX,
                y - offY+ srcCrop.height() * zoomY);
            
+           paint = PaintKit.instance().getPaintNightMode(paint); //night mode
            canvas.drawBitmap(sBitmap, matrix, paint);
            
            canvas.restore();
@@ -384,8 +386,9 @@ public class PictureKit
                Matrix matrix = new Matrix();
                matrix.postScale(((float)destWidth) / sBitmap.getWidth(),
                    ((float)destHeight) / sBitmap.getHeight());
-               matrix.postTranslate(x, y);              
-               
+               matrix.postTranslate(x, y);
+
+               paint = PaintKit.instance().getPaintNightMode(paint); //night mode
                canvas.drawBitmap(sBitmap, matrix, paint);
            }
            else

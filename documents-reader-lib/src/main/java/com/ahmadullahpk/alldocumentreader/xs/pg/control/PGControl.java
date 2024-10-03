@@ -725,7 +725,17 @@ public class PGControl extends AbstractControl
 
     @Override
     public void setNightMode(boolean isNightMode) {
+        pgView.setNightMode(isNightMode);
+    }
 
+    @Override
+    public void gotoPage(int page) {
+        if (page > pgView.getSlideCount()) {
+            page = pgView.getSlideCount();
+        } else if (page < 1) {
+            page = 1;
+        }
+        pgView.showSlide(page - 1, false);
     }
 
     //

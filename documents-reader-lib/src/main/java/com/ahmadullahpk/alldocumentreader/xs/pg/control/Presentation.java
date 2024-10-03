@@ -7,6 +7,7 @@
 package   com.ahmadullahpk.alldocumentreader.xs.pg.control;
 
 import java.util.List;
+import java.util.Objects;
 
 import   com.ahmadullahpk.alldocumentreader.xs.common.IOfficeToPicture;
 import   com.ahmadullahpk.alldocumentreader.xs.common.ISlideShow;
@@ -256,7 +257,7 @@ public class Presentation extends FrameLayout implements IFind, IExportListener
             post(new Runnable()
             {
                 
-                @ Override
+                @Override
                 public void run()
                 {
                     if (control != null)
@@ -281,6 +282,11 @@ public class Presentation extends FrameLayout implements IFind, IExportListener
         try
         {
             slideView.drawSlide(canvas, fitZoom, callouts);
+            //find this slide
+            if (pgFind.getQuery()!= null && !Objects.equals(pgFind.getQuery(), ""))
+            {
+                pgFind.find(getFind().getQuery());
+            }
             // auto test code
             if (control.isAutoTest())
             {
@@ -1255,6 +1261,10 @@ public class Presentation extends FrameLayout implements IFind, IExportListener
             
             return slideView.getSlideshowToImage(pgModel.getSlide(slideIndex - 1), step);
     	}        
+    }
+    public void setNightMode(boolean night)
+    {
+        invalidate();
     }
     
     /**

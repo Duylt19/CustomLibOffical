@@ -1,6 +1,6 @@
 /*
  * 文件名称:          WPRead.java
- *  
+ *
  * 编译器:            android2.2
  * 时间:              下午2:11:03
  */
@@ -47,6 +47,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * word应用组件
  * <p>
@@ -59,7 +62,7 @@ import android.widget.LinearLayout;
  * <p>
  * 负责人:          梁金晶
  * <p>
- * 负责小组:         
+ * 负责小组:
  * <p>
  * <p>
  */
@@ -67,7 +70,7 @@ public class Word extends LinearLayout implements IWord
 {
 
     /**
-     * 
+     *
      * @param context
      * @param attrs
      */
@@ -77,7 +80,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      * @param context
      */
     public Word(Context context, IDocument doc, String filePath, IControl control)
@@ -127,7 +130,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     private void initManage()
     {
@@ -178,7 +181,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      *
      */
     public void onDraw(Canvas canvas)
@@ -212,7 +215,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public void createPicture()
     {
@@ -230,7 +233,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     private void toPicture(IOfficeToPicture otp)
     {
@@ -288,7 +291,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      * @param destBitmap
      * @return
      */
@@ -298,15 +301,15 @@ public class Word extends LinearLayout implements IWord
         {
             return null;
         }
-    	
+
     	if (getCurrentRootType() == WPViewConstant.PRINT_ROOT && printWord != null)
         {
     		return printWord.getSnapshot(bitmap);
         }
-    	
+
         boolean b = PictureKit.instance().isDrawPictrue();
         PictureKit.instance().setDrawPictrue(true);
-        
+
         float paintZoom = getZoom();
         float tX = -getScrollX();
         float tY = -getScrollY();
@@ -344,10 +347,10 @@ public class Word extends LinearLayout implements IWord
         }
 
         PictureKit.instance().setDrawPictrue(b);
-        
+
     	return bitmap;
     }
-    
+
     /**
      * This is called during layout when the size of this view has changed. If
      * you were just added to the view hierarchy, you're called with the old
@@ -405,12 +408,12 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public void layoutNormal()
     {
         if (normalRoot != null)
-        {   
+        {
             normalRoot.stopBackLayout();
             post(new Runnable()
             {
@@ -426,15 +429,15 @@ public class Word extends LinearLayout implements IWord
             });
         }
     }
-    
+
     /**
-     * 
+     *
      */
     public void layoutPrintMode()
     {
         post(new Runnable()
         {
-            
+
             @ Override
             public void run()
             {
@@ -452,7 +455,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public void computeScroll()
     {
@@ -464,7 +467,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public void switchView(int rootType)
     {
@@ -515,7 +518,7 @@ public class Word extends LinearLayout implements IWord
             if (printWord == null)
             {
                 printWord = new PrintWord(getContext(), control, pageRoot);
-                
+
                 //print view background
                 Object bg = control.getMainFrame().getViewBackground();;
             	if(bg != null)
@@ -529,7 +532,7 @@ public class Word extends LinearLayout implements IWord
                 		printWord.setBackgroundDrawable((Drawable)bg);
                 	}
             	}
-            	
+
                 addView(printWord);
                 post(new Runnable()
                 {
@@ -562,7 +565,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public Rectangle getVisibleRect()
     {
@@ -595,13 +598,13 @@ public class Word extends LinearLayout implements IWord
             oldZoom = this.normalZoom;
             this.normalZoom = zoom;
         }
-        
+
         scrollToFocusXY(zoom, oldZoom, pointX, pointY);
     }
-    
+
     /**
      * set fit size for PPT，Word view mode, PDf
-     * 
+     *
      * @param  value  fit size mode
      *          = 0, fit size of get minimum value of pageWidth / viewWidth and pageHeight / viewHeight;
      *          = 1, fit size of pageWidth
@@ -614,16 +617,16 @@ public class Word extends LinearLayout implements IWord
             printWord.setFitSize(value);
         }
     }
-    
+
     /**
      * get fit size statue
-     * 
+     *
      * @return fit size statue
-     *          = 0, left/right and top/bottom don't alignment 
+     *          = 0, left/right and top/bottom don't alignment
      *          = 1, top/bottom alignment
      *          = 2, left/right alignment
-     *          = 3, left/right and top/bottom alignment 
-     */ 
+     *          = 3, left/right and top/bottom alignment
+     */
     public int getFitSizeState()
     {
         if (currentRootType == WPViewConstant.PRINT_ROOT)
@@ -634,7 +637,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      * @param newScale
      * @param oldScale
      * @param focusScreenX
@@ -676,18 +679,18 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      *
      */
     public void scrollTo(int x, int y)
     {
         x = Math.min(Math.max(x, 0), (int)(getWordWidth() * getZoom() - getWidth()));
-        y = Math.min(Math.max(y, 0), (int)(getWordHeight() * getZoom() - getHeight())); 
+        y = Math.min(Math.max(y, 0), (int)(getWordHeight() * getZoom() - getHeight()));
         super.scrollTo(Math.max(x, 0), Math.max(y, 0));
     }
 
     /**
-     * 
+     *
      */
     public int getCurrentPageNumber()
     {
@@ -753,19 +756,19 @@ public class Word extends LinearLayout implements IWord
             }
             String pn = String.valueOf(currentNumber) + " / "
                 + String.valueOf(pageRoot.getPageCount());
-            
+
             int w = (int)paint.measureText(pn);
             int h = (int)(paint.descent() - paint.ascent());
             int x = (int)((rect.right + getScrollX() - w) / 2);
             int y = (int)((rect.bottom - h) - 20);
 
-            Drawable drawable = SysKit.getPageNubmerDrawable(); 
+            Drawable drawable = SysKit.getPageNubmerDrawable();
             drawable.setBounds((int)(x - 10), y - 10, x + w + 10, y + h + 10);
             drawable.draw(canvas);
 
             y -= paint.ascent();
             canvas.drawText(pn, x, y, paint);
-        }        
+        }
         if (preShowPageIndex != currentNumber
             || prePageCount != getPageCount())
         {
@@ -797,7 +800,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public Rectangle modelToView(long offset, Rectangle rect, boolean isBack)
     {
@@ -817,7 +820,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public IView getRoot(int rootType)
     {
@@ -833,7 +836,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public String getText(long start, long end)
     {
@@ -849,7 +852,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public WPFind getFind()
     {
@@ -865,16 +868,36 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      *
      */
     public IHighlight getHighlight()
     {
         return highlight;
     }
+    public void addListHighlight(IHighlight highlight)
+    {
+        highlightList.add(highlight);
+    }
+    public void removeListHighlight()
+    {
+        if (highlightList.isEmpty())
+        {
+            return;
+        }
+       for (int i = 0; i < highlightList.size(); i++)
+       {
+           highlightList.get(i).dispose();
+       }
+       highlightList.clear();
+    }
+    public List<IHighlight> getHighlightList()
+    {
+        return highlightList;
+    }
 
     /**
-     * 
+     *
      *
      */
     public IDocument getDocument()
@@ -883,7 +906,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public IControl getControl()
     {
@@ -899,7 +922,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public WPEventManage getEventManage()
     {
@@ -923,7 +946,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public void setSize(int w, int h)
     {
@@ -932,7 +955,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public int getWordHeight()
     {
@@ -948,7 +971,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      */
     public int getWordWidth()
     {
@@ -965,9 +988,9 @@ public class Word extends LinearLayout implements IWord
 
     /**
      * switch page for page index (base 0)
-     * 
+     *
      * @param index     page index
-     * 
+     *
      * @param dircetion
      */
     protected void showPage(int index, int direction)
@@ -1002,7 +1025,7 @@ public class Word extends LinearLayout implements IWord
 
     /**
      * page to image for page number (base 1)
-     * 
+     *
      * @return bitmap raw data
      */
     public Bitmap pageToImage(int pageNumber)
@@ -1013,7 +1036,7 @@ public class Word extends LinearLayout implements IWord
         {
             return null;
         }
-        
+
         IView view = pageRoot.getPageView(pageNumber - 1);
         if (view == null)
         {
@@ -1025,8 +1048,8 @@ public class Word extends LinearLayout implements IWord
         canvas.drawColor(Color.WHITE);
         ((PageView)view).draw(canvas, 0, 0, 1);
         return bitmap;
-    }    
-    
+    }
+
     /**
      * specific area of page to image. if area is not completely contained in the page, return null
      * @param pageNumber page number
@@ -1044,9 +1067,9 @@ public class Word extends LinearLayout implements IWord
         {
             return null;
         }
-        
+
         IView view = pageRoot.getPageView(pageNumber - 1);
-        
+
         if(view != null && SysKit.isValidateRect(view.getWidth(), view.getHeight(), srcLeft, srcTop, srcWidth, srcHeight))
         {
             boolean b = PictureKit.instance().isDrawPictrue();
@@ -1059,15 +1082,15 @@ public class Word extends LinearLayout implements IWord
                 bitmap = Bitmap.createBitmap((int)(srcWidth * paintZoom), (int)(srcHeight * paintZoom),  Config.ARGB_8888);
             }
             catch(OutOfMemoryError e)
-            {                
+            {
                 return null;
             }
-            
+
             if (bitmap == null)
             {
                 return null;
             }
-            
+
             float tX = -(srcLeft + view.getX()) * paintZoom;
             float tY = -(srcTop + view.getY()) * paintZoom;
 
@@ -1075,16 +1098,16 @@ public class Word extends LinearLayout implements IWord
             canvas.translate(tX, tY);
             canvas.drawColor(Color.WHITE);
             ((PageView)view).draw(canvas, 0, 0, paintZoom);
-            
+
             PictureKit.instance().setDrawPictrue(b);
             return bitmap;
         }
-        
+
         return null;
     }
-    
+
     /**
-     * 
+     *
      * @param zoom
      * @return
      */
@@ -1095,14 +1118,14 @@ public class Word extends LinearLayout implements IWord
         {
             int thumbnailWidth = Math.round(size.width * zoom);
             int thumbnailHeight = Math.round(size.height * zoom);
-            
+
             return pageAreaToImage(1, 0, 0, size.width, size.height, thumbnailWidth, thumbnailHeight);
         }
         return null;
     }
-    
+
     /**
-     * 
+     *
      */
     public int getPageCount()
     {
@@ -1148,17 +1171,17 @@ public class Word extends LinearLayout implements IWord
             {
                 return printWord.getZoom();
             }
-            else 
+            else
             {
                 return zoom;
             }
         }
-        
+
         return zoom;
     }
 
     /**
-     * 
+     *
      */
     public float getFitZoom()
     {
@@ -1194,9 +1217,9 @@ public class Word extends LinearLayout implements IWord
         }
         return Math.min(z, 1.0f);
     }
-    
+
     /**
-     * 
+     *
      */
     public byte getEditType()
     {
@@ -1220,7 +1243,7 @@ public class Word extends LinearLayout implements IWord
     }
 
     /**
-     * 
+     *
      * @param para
      * @return
      */
@@ -1228,20 +1251,20 @@ public class Word extends LinearLayout implements IWord
     {
         return null;
     }
-    
+
     /**
-     * 
+     *
      */
     public IShape getTextBox()
     {
         return null;
     }
-    
-    
+
+
     /**
-     * 
+     *
      */
-    public void setBackgroundColor(int color) 
+    public void setBackgroundColor(int color)
     {
         super.setBackgroundColor(color);
         if (printWord != null)
@@ -1249,9 +1272,9 @@ public class Word extends LinearLayout implements IWord
             printWord.setBackgroundColor(color);
         }
     }
-    
+
     /**
-     * 
+     *
      *
      */
     public void setBackgroundResource(int resid)
@@ -1262,12 +1285,12 @@ public class Word extends LinearLayout implements IWord
             printWord.setBackgroundResource(resid);
         }
     }
-    
+
     /**
-     * 
+     *
      *
      */
-    public void setBackgroundDrawable(Drawable d) 
+    public void setBackgroundDrawable(Drawable d)
     {
        super.setBackgroundDrawable(d);
        if (printWord != null)
@@ -1275,15 +1298,15 @@ public class Word extends LinearLayout implements IWord
            printWord.setBackgroundDrawable(d);
        }
     }
-    
+
     /**
-     * 
+     *
      */
     public PrintWord getPrintWord()
     {
         return printWord;
     }
-    
+
     /**
      * update total pages after layout completed
      */
@@ -1294,9 +1317,13 @@ public class Word extends LinearLayout implements IWord
     		control.actionEvent(EventConstant.APP_GENERATED_PICTURE_ID, null);
     	}
     }
-    
+    public void setNightMode(boolean night)
+    {
+        invalidate();
+    }
+
     /**
-     * 
+     *
      */
     public void dispose()
     {
@@ -1346,6 +1373,15 @@ public class Word extends LinearLayout implements IWord
         {
             printWord.dispose();
         }
+        if (highlightList != null)
+        {
+            for (int i = 0; i < highlightList.size(); i++)
+            {
+                highlightList.get(i).dispose();
+            }
+            highlightList.clear();
+            highlightList = null;
+        }
         setOnClickListener(null);
         doc = null;
         paint = null;
@@ -1377,6 +1413,7 @@ public class Word extends LinearLayout implements IWord
     protected StatusManage status;
     //
     protected IHighlight highlight;
+    protected List<IHighlight> highlightList = new ArrayList<>();
     // 事件管理
     protected WPEventManage eventManage;
     // 文件路径

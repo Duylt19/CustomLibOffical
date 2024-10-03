@@ -71,4 +71,13 @@ public class PaintKit
 
         return paint;
     }
+    public Paint getPaintNightMode(Paint paint)
+    {
+        if (SharedPrefManager.INSTANCE.getBoolean$documents_reader_lib_debug("key_night_mode", false)) {
+            ViewUtils.setNightModePaint(paint);
+        } else  {
+            paint.setColorFilter(null);
+        }
+        return paint;
+    }
 }

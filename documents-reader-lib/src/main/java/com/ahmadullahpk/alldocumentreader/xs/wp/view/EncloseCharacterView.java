@@ -6,6 +6,7 @@
  */
 package com.ahmadullahpk.alldocumentreader.xs.wp.view;
 
+import com.ahmadullahpk.alldocumentreader.xs.common.PaintKit;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPModelConstant;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPViewConstant;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.model.IElement;
@@ -83,6 +84,7 @@ public class EncloseCharacterView extends LeafView
      */
     public void draw(Canvas canvas, int originX, int originY, float zoom)
     {
+        paint = PaintKit.instance().getPaintNightMode(paint);
         super.draw(canvas, originX, originY, zoom);
         // 画圈
         drawEnclose(canvas, originX, originY, zoom);

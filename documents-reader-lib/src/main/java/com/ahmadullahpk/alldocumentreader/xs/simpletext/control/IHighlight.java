@@ -19,6 +19,7 @@ public interface IHighlight
      * draw highlight
      */
     void draw(Canvas canvas, IView line, int originX, int originY, long start, long end, float zoom);
+    void drawAll(Canvas canvas, IView line, int originX, int originY, long start, long end, float zoom);
 
     /**
      * 

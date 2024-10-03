@@ -1,11 +1,12 @@
 /*
  * 文件名称:          LeafView.java
- *  
+ *
  * 编译器:            android2.2
  * 时间:              上午10:36:21
  */
 package com.ahmadullahpk.alldocumentreader.xs.wp.view;
 
+import com.ahmadullahpk.alldocumentreader.xs.common.PaintKit;
 import com.ahmadullahpk.alldocumentreader.xs.constant.MainConstant;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPModelConstant;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPViewConstant;
@@ -37,25 +38,25 @@ import android.graphics.Paint;
  * <p>
  * 负责人:          ljj8494
  * <p>
- * 负责小组:         
+ * 负责小组:
  * <p>
  * <p>
  */
 public class LeafView extends AbstractView/* implements IMemObj*/
 {
-    
+
 	private static StringBuffer title = new StringBuffer();
-	
+
     /**
-     * 
+     *
      */
     public LeafView()
     {
-        
+
     }
 
     /**
-     * 
+     *
      * @param paraElem
      * @param elem
      */
@@ -64,15 +65,15 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         this.elem = elem;
         initProperty(elem, paraElem);
     }
-    
+
     /**
-     * 
+     *
      */
     public short getType()
     {
         return WPViewConstant.LEAF_VIEW;
-    }    
-    
+    }
+
     /**
      * 初始化leaf属性
      */
@@ -92,7 +93,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         {
             charAttr = new CharAttr();
         }
-        
+
         AttrManage.instance().fillCharAttr(charAttr, paraElem.getAttribute(), elem.getAttribute());
         // 粗斜体
         if (charAttr.isBold && charAttr.isItalic)
@@ -122,12 +123,12 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         {
             paint.setTextSize(charAttr.fontSize * (charAttr.fontScale / 100.f) * MainConstant.POINT_TO_PIXEL);
         }
-        
+
         // 颜色 
         paint.setColor(charAttr.fontColor);
         //paint.setColor(Color.BLACK);;
     }
-    
+
     /**
      * 视图布局
      * @param x
@@ -188,7 +189,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
                     breakType = WPViewConstant.BREAK_NO;
                 }
                 break;
-            } 
+            }
 
         }
 //        // 如果是上下标，则宽度需要 / 2
@@ -200,10 +201,10 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         setSize((int)tW, (int)Math.ceil((paint.descent() - paint.ascent())));
         return breakType;
     }
-    
+
     /**
      * 得到指定结束位置字符宽度
-     * 
+     *
      * @param maxEnd
      * @return
      */
@@ -223,34 +224,34 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         }
         return tW;
     }
-    
+
     private String getFieldTextReplacedByPage(String text, int page)
     {
     	if(text != null)
     	{
     		char[] chars = text.toCharArray();
     		title.delete(0, title.length());
-    		
+
     		for(int i = 0; i < chars.length; i++)
     		{
     			if(Character.isDigit(chars[i]))
     			{
     				title.append(chars[i]);
     			}
-    		}    		
-    		
+    		}
+
     		if(title.length() > 0)
     		{
     			return text.replace(title.toString(), String.valueOf(page));
-    		}    		 	
+    		}
     	}
-    	
-    	
+
+
     	return text;
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     public int getPageNumber()
@@ -262,7 +263,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         	{
         		view = view.getParentView().getParentView().getParentView();
         	}
-        	
+
         	if(view instanceof PageView)
         	{
         		return ((PageView)view).getPageNumber();
@@ -274,13 +275,13 @@ public class LeafView extends AbstractView/* implements IMemObj*/
     	}
     	catch(Exception e)
     	{
-    		
+
     	}
-    	
+
     	return 0;
     }
     /**
-     * 
+     *
      * @param canvas
      * @param x
      * @param y
@@ -290,6 +291,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
     {
         float dX = (x * zoom) + originX;
         float dY = (y * zoom) + originY;
+        paint = PaintKit.instance().getPaintNightMode(paint); //night mode
         int oldColor = paint.getColor();
         //CharacterRun cr = (CharacterRun)elem;
         // 高亮
@@ -303,7 +305,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
                 paint.setColor(oldColor);
             }
         }
-        
+
         float oldFontSize = paint.getTextSize();
         //if (zoom != 1.0)
         {
@@ -319,7 +321,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         String text = elem.getText(null);
         int s = (int)(start - elem.getStartOffset());
         int e = (int)(end - elem.getStartOffset());
-        
+
         boolean adjustFieldText = false;
         //total pages
         if(charAttr.pageNumberType == WPModelConstant.PN_PAGE_NUMBER)
@@ -344,14 +346,14 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         				}
         				else if(view instanceof WPSTRoot)
         				{
-        					view = view.getParentView().getParentView().getParentView().getParentView();        					
+        					view = view.getParentView().getParentView().getParentView().getParentView();
         				}
         				else
         				{
         					view = view.getParentView();
         				}
     				}
-    				
+
     				if(pageView != null)
     				{
     					adjustFieldText = true;
@@ -360,11 +362,11 @@ public class LeafView extends AbstractView/* implements IMemObj*/
                     	e = text.length();
     				}
     			}
-    			
+
     		}
     		catch(Exception exc)
     		{
-    			
+
     		}
         }
         else if(charAttr.pageNumberType == WPModelConstant.PN_TOTAL_PAGES && numPages > 0)
@@ -374,7 +376,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         	s = 0;
         	e = text.length();
         }
-        
+
         float[] widths = new float[text.length()];
         paint.getTextWidths(text, widths);
         float extX = 0;
@@ -394,7 +396,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
             float extW = 0;
             IView nextView = getNextView();
             if (nextView != null
-            		&& (nextView.getType() == WPViewConstant.LEAF_VIEW 
+            		&& (nextView.getType() == WPViewConstant.LEAF_VIEW
             			|| (nextView.getType() == WPViewConstant.SHAPE_VIEW && ((ShapeView)nextView).isInline())))
             {
                 float nextX = getNextView().getX() * zoom;
@@ -406,7 +408,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
             }
             if (extW != 0)
             {
-                extX = extW / (e - s); 
+                extX = extW / (e - s);
             }
         }
         float drawX = dX;
@@ -427,7 +429,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
             {
                 if (widths[j] != 0)
                 {
-                    break;                   
+                    break;
                 }
                 skip++;
             }
@@ -435,7 +437,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
             drawX += widths[i] - extX;
             i += skip;
         }
-        
+
         // 绘制删除线
         dY += (int)Math.ceil((paint.descent() - paint.ascent())) / 2;
         // 单删除线
@@ -451,8 +453,8 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         }
         paint.setTextSize(oldFontSize);
     }
-    
-    
+
+
     /**
      * model到视图
      * @param offset 指定的offset
@@ -469,8 +471,8 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         rect.y += getY();
         rect.height = getLayoutSpan(WPViewConstant.Y_AXIS);
         return rect;
-    }    
-    
+    }
+
     /**
      * @param x
      * @param y
@@ -502,7 +504,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         }
         return start + count;
     }
-    
+
     /**
      * 得到基线
      */
@@ -514,25 +516,25 @@ public class LeafView extends AbstractView/* implements IMemObj*/
     	}
         return 0;
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     public int getUnderlinePosition()
     {
         return (int)(getY() + getHeight() - (getHeight() - paint.getTextSize()));
     }
-    
+
     /**
-     * 
+     *
      */
     public CharAttr getCharAttr()
-    {   
+    {
         return this.charAttr;
     }
-    
-    
+
+
     /**
      * 放回对象池
      */
@@ -544,7 +546,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
         child = null;
         ViewFactory.leafView.free(this);*/
     }
-    
+
     /**
      * current leafview has total page number field code or not
      * @return
@@ -557,11 +559,11 @@ public class LeafView extends AbstractView/* implements IMemObj*/
     	}
     	return false;
     }
-    
+
     /**
-     * 
+     *
      * @param numPages
-     * @return 
+     * @return
      */
     public void setNumPages(int numPages)
     {
@@ -570,7 +572,7 @@ public class LeafView extends AbstractView/* implements IMemObj*/
     		this.numPages = numPages;
     	}
     }
-    
+
     /**
      * 复制对象
      * /
@@ -578,9 +580,9 @@ public class LeafView extends AbstractView/* implements IMemObj*/
     {
         return new LeafView();
     }
-    
+
     /**
-     * 
+     *
      */
     public void dispose()
     {

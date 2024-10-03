@@ -1,6 +1,6 @@
 /*
  * 文件名称:           PGFind.java
- *  
+ *
  * 编译器:             android2.2
  * 时间:               下午1:58:09
  */
@@ -12,6 +12,8 @@ import   com.ahmadullahpk.alldocumentreader.xs.common.shape.TextBox;
 import   com.ahmadullahpk.alldocumentreader.xs.constant.EventConstant;
 import   com.ahmadullahpk.alldocumentreader.xs.java.awt.Rectangle;
 import   com.ahmadullahpk.alldocumentreader.xs.pg.model.PGSlide;
+import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.Highlight;
+import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.IHighlight;
 import   com.ahmadullahpk.alldocumentreader.xs.simpletext.model.SectionElement;
 import   com.ahmadullahpk.alldocumentreader.xs.system.IFind;
 
@@ -27,26 +29,26 @@ import   com.ahmadullahpk.alldocumentreader.xs.system.IFind;
  * <p>
  * 负责人:         jhy1790
  * <p>
- * 负责小组:         
+ * 负责小组:
  * <p>
  * <p>
  */
 public class PGFind implements IFind
-{   
+{
     /**
-     * 
+     *
      */
     public PGFind(Presentation presentation)
     {
         this.presentation = presentation;
         rect = new Rectangle();
     }
-    
+
     /**
-     * 
+     *
      */
     public boolean find(String query)
-    {  
+    {
         if (query == null)
         {
             return false;
@@ -54,14 +56,18 @@ public class PGFind implements IFind
         this.query = query;
         startOffset = -1;
         shapeIndex = -1;
-        
+
         // find
+        presentation.getEditor().removeListHighlight();
+        boolean result = false;
         int slideIndex = presentation.getCurrentIndex();
         do
         {
             if (findSlideForward(slideIndex))
             {
                 return true;
+//                result = true;
+//                break;
             }
             if (++slideIndex == presentation.getRealSlideCount())
             {
@@ -69,11 +75,50 @@ public class PGFind implements IFind
             }
         }
         while (slideIndex != presentation.getCurrentIndex());
+//        int oldOffset = startOffset;
+//        int oldShapeIndex = shapeIndex;
+//        while(findAllForward(slideIndex)){
+//            result = true;
+//        }
+//        startOffset = oldOffset;
+//        shapeIndex = oldShapeIndex;
+        return result;
+    }
+    private boolean findAllForward(int slideIndex){
+        PGSlide slide = presentation.getSlide(slideIndex);
+        for (int i = Math.max(0, shapeIndex); i < slide.getShapeCountForFind(); i++)
+        {
+            IShape shape = slide.getShapeForFind(i);
+            if (shape != null && shape.getType() == AbstractShape.SHAPE_TEXTBOX)
+            {
+                SectionElement elem = ((TextBox)shape).getElement();
+                if (elem == null || elem.getEndOffset() - elem.getStartOffset() == 0)
+                {
+                    continue;
+                }
+                int offset = shapeIndex == i && presentation.getCurrentIndex() == slideIndex ? startOffset : -1;
+                if (offset >= 0)
+                {
+                    offset = elem.getText(presentation.getRenderersDoc()).indexOf(query, startOffset + query.length());
+                }
+                else
+                {
+                    offset = elem.getText(presentation.getRenderersDoc()).indexOf(query);
+                }
+                if (offset >= 0)
+                {
+                    startOffset = offset;
+                    shapeIndex = i;
+                    addAllHighlight(slideIndex, (TextBox)slide.getShapeForFind(i),startOffset);
+                    return true;
+                }
+            }
+        }
         return false;
     }
-    
+
     /**
-     * 
+     *
      */
     public boolean findBackward()
     {
@@ -94,9 +139,9 @@ public class PGFind implements IFind
         while (--slideIndex >= 0);
         return false;
     }
-    
+
     /**
-     * 
+     *
      */
     public boolean findForward()
     {
@@ -117,9 +162,9 @@ public class PGFind implements IFind
         while (++slideIndex != presentation.getRealSlideCount());
         return false;
     }
-    
+
     /**
-     * 
+     *
      */
     private boolean findSlideBackward(int slideIndex)
     {
@@ -155,9 +200,9 @@ public class PGFind implements IFind
         }
         return false;
     }
-    
+
     /**
-     * 
+     *
      */
     private boolean findSlideForward(int slideIndex)
     {
@@ -185,14 +230,15 @@ public class PGFind implements IFind
                 {
                     startOffset = offset;
                     shapeIndex = i;
-                    addHighlight(slideIndex, (TextBox)shape);
+//                    addAllHighlight(slideIndex, (TextBox)slide.getShapeForFind(i),startOffset);
+                    addHighlight(slideIndex, (TextBox)slide.getShapeForFind(i));
                     return true;
                 }
             }
         }
         return false;
     }
-    
+
     /**
      * show find, add highlight
      */
@@ -223,7 +269,7 @@ public class PGFind implements IFind
         {
             presentation.postInvalidate();
         }
-        this.slideIndex = slideIndex; 
+        this.slideIndex = slideIndex;
         presentation.getEditor().setEditorTextBox(textBox);
         presentation.getEditor().getHighlight().addHighlight(startOffset, startOffset + query.length());
         //
@@ -231,9 +277,17 @@ public class PGFind implements IFind
         //
         //presentation.getControl().actionEvent(EventConstant.APP_GENERATED_PICTURE_ID, null);
     }
-    
+    public void addAllHighlight(int slideIndex, TextBox textBox, int offset)
+    {
+        presentation.getEditor().setEditorTextBox(textBox);
+        Highlight newHighLight = new Highlight(presentation.getEditor());
+        newHighLight.addHighlight(offset, offset + query.length());
+        newHighLight.setSlideIndex(slideIndex);
+        presentation.getEditor().addListHighlight(newHighLight);
+    }
+
     /**
-     * 
+     *
      */
     public void onConfigurationChanged()
     {
@@ -244,7 +298,7 @@ public class PGFind implements IFind
             presentation.postInvalidate();
         }
     }
-    
+
     /**
      * @return Returns the isSetPointToVisible.
      */
@@ -260,7 +314,7 @@ public class PGFind implements IFind
     {
         this.isSetPointToVisible = isSetPointToVisible;
     }
-    
+
     /**
      *
      */
@@ -274,11 +328,15 @@ public class PGFind implements IFind
      */
     public void resetSearchResult()
     {
-        
+
     }
-    
+    public String getQuery()
+    {
+        return query;
+    }
+
     /**
-     * 
+     *
      */
     public void dispose()
     {

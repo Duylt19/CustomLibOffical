@@ -22,7 +22,7 @@ public class Highlight implements IHighlight
     {
         this.word = word;
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(0xA0BBDDFF);
+        paint.setColor(0xA0FF0000);
         //paint.setStyle(Style.FILL);
     }
 
@@ -106,6 +106,85 @@ public class Highlight implements IHighlight
             }
         }        
     }
+    public void drawAll(Canvas canvas, IView line, int originX, int originY, long start, long end, float zoom)
+    {
+        paint.setColor(0xA0FFFF00);
+        if (!isSelectText() || end <= selectStart || start > selectEnd || !isPaintHighlight)
+        {
+            return;
+        }
+        start = Math.max(start, selectStart);
+        IView leaf = line.getView(start, WPViewConstant.LEAF_VIEW, false);
+        if (leaf == null)
+        {
+            return;
+        }
+
+        Rectangle sRect = new Rectangle();
+        word.modelToView(start, sRect, false);
+
+        long leafEnd = leaf.getEndOffset(null);
+        long paintEnd = Math.min(end, selectEnd);
+
+        int x = sRect.x;
+        int y = originY;
+        int w = leaf.getWidth();
+        //
+        if (start == selectStart)
+        {
+            Rectangle leafRect = WPViewKit.instance().getAbsoluteCoordinate(leaf,
+                    WPViewConstant.PAGE_ROOT, new Rectangle());
+            if (word.getEditType() == MainConstant.APPLICATION_TYPE_PPT
+                    && word.getTextBox() != null)
+            {
+                leafRect.x += word.getTextBox().getBounds().x;
+                leafRect.y += word.getTextBox().getBounds().y;
+            }
+            w -= (sRect.x - leafRect.x);
+        }
+
+        int h = line.getLayoutSpan(WPViewConstant.Y_AXIS);
+        IView parent = line.getParentView();
+        if (parent != null)
+        {
+            // first line
+            if (line.getPreView() == null)
+            {
+                y -= parent.getTopIndent() * zoom;
+                h += parent.getTopIndent();
+            }
+            // last line
+            if (line.getNextView() == null)
+            {
+                h += parent.getBottomIndent();
+            }
+        }
+
+        while (leafEnd <= paintEnd)
+        {
+            canvas.drawRect(x * zoom, y,  (x + w ) * zoom, y + h * zoom, paint);
+            x += w;
+            leaf = leaf.getNextView();
+            if (leaf == null)
+            {
+                break;
+            }
+            w = leaf.getWidth();
+            leafEnd = leaf.getEndOffset(null);
+        }
+
+        // 绘制，选取范围最后部分
+        if (end >= selectEnd)
+        {
+            Rectangle eRect = new Rectangle();
+            word.modelToView(selectEnd, eRect, false);
+            if (eRect.x > x)
+            {
+                canvas.drawRect(x * zoom, y, eRect.x * zoom, y  + h  * zoom, paint);
+            }
+        }
+        paint.setColor(0xA0FF0000);
+    }
 
     /** 
      * 
@@ -184,7 +263,15 @@ public class Highlight implements IHighlight
     {
         this.isPaintHighlight = isPaintHighlight;
     }
-    
+    public int getSlideIndex()
+    {
+        return slideIndex;
+    }
+    public void setSlideIndex(int slideIndex)
+    {
+        this.slideIndex = slideIndex;
+    }
+    private int slideIndex = -1;
     /** 
      * 
      */

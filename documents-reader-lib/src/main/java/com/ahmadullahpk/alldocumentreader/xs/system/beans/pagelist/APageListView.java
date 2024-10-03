@@ -195,13 +195,13 @@ public class APageListView extends AdapterView<Adapter>
         
         if(pageListViewListener.getPageListViewMovingPosition() == IPageListViewListener.Moving_Horizontal)
         {
-        	layout_Horizontal();
+            layout_Horizontal();
         }
         else
         {
-        	layout_Vertical();
+            layout_Vertical();
         }
-        
+
         invalidate();
         
         if (isConfigurationChanged)

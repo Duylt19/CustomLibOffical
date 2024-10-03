@@ -11,14 +11,17 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.ahmadullahpk.alldocumentreader.databinding.ActivityViewFilesBinding;
 import com.ahmadullahpk.alldocumentreader.R;
+import com.ahmadullahpk.alldocumentreader.databinding.DialogGotoPageBinding;
 import com.ahmadullahpk.alldocumentreader.util.SharedPrefManager;
 import com.ahmadullahpk.alldocumentreader.xs.common.IOfficeToPicture;
 import com.ahmadullahpk.alldocumentreader.xs.constant.EventConstant;
@@ -30,6 +33,7 @@ import com.ahmadullahpk.alldocumentreader.xs.ss.sheetbar.SheetBar;
 import com.ahmadullahpk.alldocumentreader.xs.system.IControl;
 import com.ahmadullahpk.alldocumentreader.xs.system.IMainFrame;
 import com.ahmadullahpk.alldocumentreader.xs.system.MainControl;
+import com.ahmadullahpk.alldocumentreader.xs.system.beans.pagelist.IPageListViewListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -55,6 +59,7 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
     private String tempFilePath;
     private Toast toast;
     private boolean writeLog = true;
+    private byte viewType = IPageListViewListener.Moving_Horizontal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,11 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
         binding = ActivityViewFilesBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
+        if (SharedPrefManager.INSTANCE.getBoolean$documents_reader_lib_debug("key_night_mode", false)) {
+            binding.imgMode.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_sun));
+        }else {
+            binding.imgMode.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_night));
+        }
 
         binding.headerTitleText.setTextAppearance(this, R.style.PageTitleBold);
         binding.imgBack.setOnClickListener(new View.OnClickListener() {
@@ -86,18 +95,49 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
         binding.imgPre.setOnClickListener(view1 -> {
             this.control.getFind().findBackward();
         });
+        binding.imgGotoPage.setOnClickListener(view1 -> {
+            DialogGotoPageBinding dialogBinding = DialogGotoPageBinding.inflate(getLayoutInflater());
+            Dialog dialog = new Dialog(this);
+            dialog.setContentView(dialogBinding.getRoot());
+            dialogBinding.tvOkay.setOnClickListener(view2 -> {
+                dialog.dismiss();
+                try {
+                    if (dialogBinding.edtGotoPage.getText().toString().isEmpty()) {
+                        return;
+                    }
+                    int page = Integer.parseInt(dialogBinding.edtGotoPage.getText().toString());
+                    this.control.gotoPage(page);
+                }catch (NumberFormatException e){
+                    this.control.gotoPage(1);
+                }
+            });
+            dialogBinding.tvCancel.setOnClickListener(view2 -> {
+                dialog.dismiss();
+            });
+            if (dialog != null) {
+                dialog.show();
+            }
+        });
         binding.imgMode.setOnClickListener(view1 -> {
-            if (view1.isSelected()) {
+            if (SharedPrefManager.INSTANCE.getBoolean$documents_reader_lib_debug("key_night_mode", false)) {
                 SharedPrefManager.INSTANCE.putBoolean$documents_reader_lib_debug("key_night_mode", false);
                 this.control.setNightMode(false);
-                view1.setSelected(false);
+                binding.imgMode.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_night));
             } else {
                 SharedPrefManager.INSTANCE.putBoolean$documents_reader_lib_debug("key_night_mode", true);
                 this.control.setNightMode(true);
-                view1.setSelected(true);
+                binding.imgMode.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_sun));
             }
         });
-
+        binding.imgChangeViewMode.setOnClickListener(v->{
+            if (this.control.getMainFrame().getPageListViewMovingPosition() == IPageListViewListener.Moving_Horizontal) {
+                this.control.getMainFrame().setPageListViewMovingPosition(IPageListViewListener.Moving_Vertical);
+                viewType = IPageListViewListener.Moving_Vertical;
+            } else {
+                this.control.getMainFrame().setPageListViewMovingPosition(IPageListViewListener.Moving_Horizontal);
+                viewType = IPageListViewListener.Moving_Horizontal;
+            }
+        });
 
         this.control = new MainControl(this);
         this.appFrame = findViewById(R.id.appFrame);
@@ -331,7 +371,11 @@ public class ViewFiles_Activity extends BaseActivity implements IMainFrame {
 
     @Override
     public byte getPageListViewMovingPosition() {
-        return 0;
+        return viewType;
+    }
+
+    @Override
+    public void setPageListViewMovingPosition(byte position) {
     }
 
 

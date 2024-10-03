@@ -10,6 +10,10 @@ import com.ahmadullahpk.alldocumentreader.xs.constant.MainConstant;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPAttrConstant;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPViewConstant;
 import com.ahmadullahpk.alldocumentreader.xs.java.awt.Rectangle;
+import com.ahmadullahpk.alldocumentreader.xs.pg.control.PGEditor;
+import com.ahmadullahpk.alldocumentreader.xs.pg.control.Presentation;
+import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.Highlight;
+import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.IHighlight;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.control.IWord;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.model.IElement;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.view.AbstractView;
@@ -19,10 +23,15 @@ import com.ahmadullahpk.alldocumentreader.xs.simpletext.view.IView;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.view.PageAttr;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.view.ParaAttr;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.view.ViewKit;
+import com.ahmadullahpk.alldocumentreader.xs.wp.control.Word;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * word 行视图
@@ -337,7 +346,7 @@ public class LineView extends AbstractView/* implements IMemObj*/
         if (getTopIndent() < 0
             && word != null && word.getEditType() == MainConstant.APPLICATION_TYPE_WP)
         {
-            canvas.clipRect(dX, dY - getTopIndent() * zoom, dX + getLayoutSpan(WPViewConstant.X_AXIS) * zoom, 
+            canvas.clipRect(dX, dY - getTopIndent() * zoom, dX + getLayoutSpan(WPViewConstant.X_AXIS) * zoom,
                 dY - getTopIndent() * zoom + getLayoutSpan(WPViewConstant.Y_AXIS) * zoom);
         }
         while (view != null)
@@ -345,16 +354,31 @@ public class LineView extends AbstractView/* implements IMemObj*/
             if (view.intersection(clip, dX, dY, zoom))
             {
                 view.draw(canvas, dX, dY, zoom);
-            }            
+            }
             view = view.getNextView();
         }
         canvas.restore();
-        // draw underline 
+        // draw underline
         drawUnderline(canvas, originX, originY, zoom);
         // 绘制高亮
         if (word != null && word.getHighlight() != null)
         {
             word.getHighlight().draw(canvas, this, dX, dY, getStartOffset(null), getEndOffset(null), zoom);
+        }
+        if (word!= null && word.getHighlightList() != null)
+        {
+            List<IHighlight> highlightList = new ArrayList<>(word.getHighlightList());
+            for (IHighlight highlight : highlightList)
+            {
+                if (word instanceof PGEditor){
+                    if (((PGEditor) word).getPGView().getCurrentIndex() == ((Highlight) highlight).getSlideIndex()) {
+                        highlight.drawAll(canvas, this, dX, dY, getStartOffset(null),
+                                getEndOffset(null), zoom);
+                    }
+                }else{
+                    highlight.drawAll(canvas, this, dX, dY, getStartOffset(null), getEndOffset(null), zoom);
+                }
+            }
         }
     }
     

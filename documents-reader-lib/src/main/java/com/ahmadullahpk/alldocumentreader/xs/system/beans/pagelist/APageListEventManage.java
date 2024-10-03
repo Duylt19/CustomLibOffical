@@ -530,7 +530,7 @@ public class APageListEventManage implements
         {
             return (vx > 0) ? MOVING_RIGHT : MOVING_LEFT;
         }
-        else if (Math.abs(vy) > 2 * Math.abs(vx))
+        else if (Math.abs(vy) > /* 2 * speed move */ Math.abs(vx))
         {
             return (vy > 0) ? MOVING_DOWN : MOVING_UP;
         }

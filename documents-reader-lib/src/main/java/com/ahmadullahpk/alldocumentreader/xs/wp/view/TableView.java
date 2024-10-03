@@ -1,11 +1,12 @@
 /*
  * 文件名称:          TableView.java
- *  
+ *
  * 编译器:            android2.2
  * 时间:              下午1:47:18
  */
 package com.ahmadullahpk.alldocumentreader.xs.wp.view;
 
+import com.ahmadullahpk.alldocumentreader.xs.common.PaintKit;
 import com.ahmadullahpk.alldocumentreader.xs.constant.wp.WPViewConstant;
 import com.ahmadullahpk.alldocumentreader.xs.java.awt.Rectangle;
 import com.ahmadullahpk.alldocumentreader.xs.simpletext.model.IElement;
@@ -28,23 +29,23 @@ import android.graphics.Paint.Style;
  * <p>
  * 负责人:          ljj8494
  * <p>
- * 负责小组:         
+ * 负责小组:
  * <p>
  * <p>
  */
 public class TableView extends ParagraphView
 {
     /**
-     * 
+     *
      * @param elem
      */
     public TableView(IElement elem)
     {
         super(elem);
     }
-    
+
     /**
-     * 
+     *
      * @param canvas
      * @param x
      * @param y
@@ -55,10 +56,11 @@ public class TableView extends ParagraphView
         //int dX = (int)(x * zoom) + originX;
         //int dY = (int)(y * zoom) + originY;
         float tX = (x * zoom) + originX;
-        float tY = (y * zoom) + originY; 
+        float tY = (y * zoom) + originY;
         RowView row  = (RowView)getChildView();
         Rect clip = canvas.getClipBounds();
         Paint paint = new Paint();
+        paint = PaintKit.instance().getPaintNightMode(paint); //night mode
         paint.setStyle(Style.STROKE);
         while (row != null)
         {
@@ -74,7 +76,7 @@ public class TableView extends ParagraphView
                     rY = tY + row.getY() * zoom;
                     isFirstRow = false;
                 }
-                else 
+                else
                 {
                     rY += rowHeight;
                 }
@@ -89,13 +91,13 @@ public class TableView extends ParagraphView
                 while (cell != null)
                 {
                     if (cell.intersection(clip, (int)rX, (int)rY, zoom))
-                    {                        
+                    {
                         if (cell.isMergedCell() && !cell.isFirstMergedCell())
                         {
                             cell = (CellView)cell.getNextView();
                             isFirstCell = true;
                             continue;
-                        }                         
+                        }
                         cY = rY + cell.getY() * zoom;
                         if (isFirstCell)
                         {
@@ -104,7 +106,7 @@ public class TableView extends ParagraphView
                         }
                         else
                         {
-                            cX += cW;                          
+                            cX += cW;
                         }
                         cW = cell.getLayoutSpan(WPViewConstant.X_AXIS) * zoom;
                         cH = Math.max(cell.getHeight()* zoom, rowHeight);
@@ -123,13 +125,13 @@ public class TableView extends ParagraphView
                               int old =  paint.getColor();
                               paint.setColor(cell.getBackground());
                               paint.setStyle(Style.FILL);
-                              canvas.drawRect(cX, cY,  cRight, cY + cH, paint);                              
+                              canvas.drawRect(cX, cY,  cRight, cY + cH, paint);
                               paint.setColor(old);
                          }
                         //
                         paint.setStyle(Style.STROKE);
-                        canvas.drawRect(cX, cY, cRight, cY + cH, paint); 
-                        
+                        canvas.drawRect(cX, cY, cRight, cY + cH, paint);
+
                         canvas.save();
                         canvas.clipRect(cX, cY, cRight, cY + cH);
                         cell.draw(canvas, (int)rX, (int)rY, zoom);
@@ -141,7 +143,7 @@ public class TableView extends ParagraphView
             row = (RowView)row.getNextView();
         }
     }
-    
+
     /**
      * model到视图
      * @param offset 指定的offset
@@ -156,9 +158,9 @@ public class TableView extends ParagraphView
         }
         rect.x += getX();
         rect.y += getY();
-        return rect;        
-    }    
-    
+        return rect;
+    }
+
     /**
      * @param x
      * @param y
@@ -188,24 +190,24 @@ public class TableView extends ParagraphView
         }
         return -1;
     }
-    
-    
+
+
     /**
-     * 
+     *
      */
     public short getType()
     {
         return WPViewConstant.TABLE_VIEW;
     }
-    
+
     /**
-     * 
+     *
      */
     public void dispose()
     {
         super.dispose();
     }
-    
+
     /**
      * @return Returns the isBreakPages.
      */

@@ -9,6 +9,7 @@ package   com.ahmadullahpk.alldocumentreader.xs.ss.control;
 
 import java.io.File;
 
+import com.ahmadullahpk.alldocumentreader.util.SharedPrefManager;
 import   com.ahmadullahpk.alldocumentreader.xs.common.IOfficeToPicture;
 import   com.ahmadullahpk.alldocumentreader.xs.common.hyperlink.Hyperlink;
 import   com.ahmadullahpk.alldocumentreader.xs.common.picture.PictureKit;
@@ -67,7 +68,11 @@ public class Spreadsheet extends LinearLayout implements IFind, IReaderListener,
         this.parent = parent;
         
         fileName = filepath;
-        setBackgroundColor(Color.WHITE);
+        if (SharedPrefManager.INSTANCE.getBoolean$documents_reader_lib_debug("key_night_mode", false)) {
+            setBackgroundColor(Color.BLACK);
+        } else {
+            setBackgroundColor(Color.WHITE);
+        }
         this.workbook = book;
         this.control = control;
         eventManage = new SSEventManage(this, control);

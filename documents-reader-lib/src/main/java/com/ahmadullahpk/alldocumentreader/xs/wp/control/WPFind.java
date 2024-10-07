@@ -58,8 +58,9 @@ public class WPFind implements IFind
         word.removeListHighlight();
         boolean result = false;
         int firstIndex = -1;
-        if (query == null)
+        if (query == null || query.isEmpty())
         {
+            word.getHighlight().removeHighlight();
             return false;
         }
         isSetPointToVisible = false;

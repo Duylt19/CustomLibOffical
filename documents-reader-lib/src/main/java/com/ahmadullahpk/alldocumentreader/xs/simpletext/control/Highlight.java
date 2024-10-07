@@ -22,7 +22,7 @@ public class Highlight implements IHighlight
     {
         this.word = word;
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(0xA0FF0000);
+        paint.setColor(0xFF0000);
         //paint.setStyle(Style.FILL);
     }
 
@@ -108,7 +108,7 @@ public class Highlight implements IHighlight
     }
     public void drawAll(Canvas canvas, IView line, int originX, int originY, long start, long end, float zoom)
     {
-        paint.setColor(0xA0FFFF00);
+        paint.setColor(0xFFFF00);
         if (!isSelectText() || end <= selectStart || start > selectEnd || !isPaintHighlight)
         {
             return;
@@ -183,7 +183,7 @@ public class Highlight implements IHighlight
                 canvas.drawRect(x * zoom, y, eRect.x * zoom, y  + h  * zoom, paint);
             }
         }
-        paint.setColor(0xA0FF0000);
+        paint.setColor(0xFF0000);
     }
 
     /** 

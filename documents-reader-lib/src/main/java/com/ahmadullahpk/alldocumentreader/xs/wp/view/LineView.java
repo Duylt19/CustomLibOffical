@@ -376,7 +376,9 @@ public class LineView extends AbstractView/* implements IMemObj*/
                                 getEndOffset(null), zoom);
                     }
                 }else{
-                    highlight.drawAll(canvas, this, dX, dY, getStartOffset(null), getEndOffset(null), zoom);
+                    if (word.getHighlight().getSelectStart()!= highlight.getSelectStart() && word.getHighlight().getSelectEnd()!= highlight.getSelectEnd()){
+                        highlight.drawAll(canvas, this, dX, dY, getStartOffset(null), getEndOffset(null), zoom);
+                    }
                 }
             }
         }

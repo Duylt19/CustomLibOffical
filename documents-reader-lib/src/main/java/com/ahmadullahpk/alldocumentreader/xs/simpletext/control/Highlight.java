@@ -108,7 +108,7 @@ public class Highlight implements IHighlight
     }
     public void drawAll(Canvas canvas, IView line, int originX, int originY, long start, long end, float zoom)
     {
-        paint.setColor(0xFFFF00);
+        paint.setColor(0xA000D9FF);
         if (!isSelectText() || end <= selectStart || start > selectEnd || !isPaintHighlight)
         {
             return;
@@ -183,7 +183,7 @@ public class Highlight implements IHighlight
                 canvas.drawRect(x * zoom, y, eRect.x * zoom, y  + h  * zoom, paint);
             }
         }
-        paint.setColor(0xFF0000);
+        paint.setColor(0xA0F85656);
     }
 
     /** 

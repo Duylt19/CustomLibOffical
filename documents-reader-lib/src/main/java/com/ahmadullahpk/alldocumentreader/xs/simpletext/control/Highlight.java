@@ -22,7 +22,7 @@ public class Highlight implements IHighlight
     {
         this.word = word;
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(0xFF0000);
+        paint.setColor(0xA0FF0000);
         //paint.setStyle(Style.FILL);
     }
 

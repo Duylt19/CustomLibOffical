@@ -67,6 +67,6 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.20'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
-    implementation("com.github.Duylt19:PDFViewer:v6")
+    api("com.github.Duylt19:LibPDFViewer:v8")
 
 }
